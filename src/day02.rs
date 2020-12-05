@@ -24,7 +24,7 @@ impl Day for Day02 {
                 .collect(),
         }
     }
-    fn part_1(&self) -> Box<dyn ToString> {
+    fn part_1(&self) -> Box<dyn ToString + '_> {
         Box::new(
             self.passwords
                 .iter()

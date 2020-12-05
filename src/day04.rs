@@ -31,7 +31,7 @@ impl Day for Day04 {
                 .collect::<Vec<_>>(),
         }
     }
-    fn part_1(&self) -> Box<dyn ToString> {
+    fn part_1(&self) -> Box<dyn ToString + '_> {
         Box::new(self.passports.len())
     }
 

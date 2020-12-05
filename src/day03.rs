@@ -25,7 +25,7 @@ impl Day for Day03 {
         }
     }
 
-    fn part_1(&self) -> Box<dyn ToString> {
+    fn part_1(&self) -> Box<dyn ToString + '_> {
         Box::new(self.count_trees((3, 1)))
     }
 

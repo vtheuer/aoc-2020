@@ -14,7 +14,7 @@ impl Day for Day01 {
         }
     }
 
-    fn part_1(&self) -> Box<dyn ToString> {
+    fn part_1(&self) -> Box<dyn ToString + '_> {
         Box::new(
             self.numbers
                 .iter()

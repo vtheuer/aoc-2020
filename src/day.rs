@@ -7,10 +7,10 @@ fn time<T, F: Fn() -> T>(f: F) -> (T, f64) {
 
 pub trait Day: Sized {
     fn new(input: &str) -> Self;
-    fn part_1(&self) -> Box<dyn ToString>;
+    fn part_1(&self) -> Box<dyn ToString + '_>;
     fn part_2(&self) -> Box<dyn ToString>;
 
-    fn run_part(&self, part: fn(&Self) -> Box<dyn ToString>) -> String {
+    fn run_part(&self, part: fn(&Self) -> Box<dyn ToString + '_>) -> String {
         let (output, duration) = time(|| part(self));
         format!(
             "{}\nRun time: {:.3}ms\n",
