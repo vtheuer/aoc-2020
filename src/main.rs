@@ -1,11 +1,10 @@
 extern crate macros;
 
 use std::env;
-use std::fs::{read_dir, read_to_string};
-
-use macros::run_day;
+use std::fs::read_dir;
 
 use crate::day::Day;
+use macros::run_day;
 
 mod day;
 mod day01;
@@ -25,13 +24,18 @@ fn day_from_input() -> Option<u8> {
 }
 
 fn main() {
-    let day_number = env::args()
-        .skip(1)
-        .next()
-        .map(|a| a.parse::<u8>().expect("Could not read day number"))
-        .or_else(day_from_input)
-        .expect("No day number provided and no input found");
-    let input = &read_to_string(&format!("inputs/{:02}.txt", day_number)).unwrap();
+    let arg = env::args().skip(1).next();
 
-    run_day!(6 day_number input);
+    println!(
+        "\nTotal run time: {:.3}ms",
+        if arg == Some(String::from("-a")) {
+            (1..=6).map(|n| run_day!(6 n)).sum::<f64>()
+        } else {
+            let day_number = arg
+                .map(|a| a.parse::<u8>().expect("Could not read day number"))
+                .or_else(day_from_input)
+                .expect("No input file found");
+            run_day!(6 day_number)
+        }
+    );
 }

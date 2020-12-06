@@ -11,8 +11,8 @@ pub fn run_day(token_stream: TokenStream) -> TokenStream {
         .collect::<Vec<_>>();
     assert_eq!(
         tokens.len(),
-        3,
-        "run_day requires a day count, a day number and an input"
+        2,
+        "run_day requires a day count and a day number"
     );
     let day_count = tokens
         .get(0)
@@ -20,15 +20,14 @@ pub fn run_day(token_stream: TokenStream) -> TokenStream {
         .parse::<u8>()
         .expect("day count must be a u8 litteral");
     let day_number = tokens.get(1).unwrap();
-    let input = tokens.get(2).unwrap();
 
     format!(
-        "match {0} {{{1}, _ => panic!(\"day {{}} not found\", {0})}}",
+        "match {0} {{{1}, _ => unreachable!(\"day {{}} not found\", {0})}}",
         day_number,
         (1..=day_count)
             .map(|n| format!(
-                "{0} => {{println!(\"Day {0}\n\");crate::day{0:02}::Day{0:02}::run({1})}}",
-                n, input
+                "{0} => {{println!(\"\nDay {0}\");crate::day{0:02}::Day{0:02}::run(&std::fs::read_to_string(\"inputs/{0:02}.txt\").unwrap())}}",
+                n
             ))
             .join(","),
     )
