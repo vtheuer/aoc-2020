@@ -73,7 +73,7 @@ impl Day for Day04 {
                         "ecl" => eye_color_pattern.is_match(v),
                         "pid" => pid_pattern.is_match(v),
                         "cid" => true,
-                        _ => panic!("unknown key {}", k),
+                        _ => unreachable!("unknown key {}", k),
                     })
                 })
                 .count(),
