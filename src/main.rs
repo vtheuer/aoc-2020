@@ -13,6 +13,7 @@ mod day02;
 mod day03;
 mod day04;
 mod day05;
+mod day06;
 
 fn day_from_input() -> Option<u8> {
     read_dir("inputs")
@@ -32,5 +33,5 @@ fn main() {
         .expect("No day number provided and no input found");
     let input = &read_to_string(&format!("inputs/{:02}.txt", day_number)).unwrap();
 
-    run_day!(5 day_number input);
+    run_day!(6 day_number input);
 }
