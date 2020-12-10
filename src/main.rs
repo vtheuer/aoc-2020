@@ -15,6 +15,12 @@ mod day03;
 mod day04;
 mod day05;
 mod day06;
+mod day07;
+mod day08;
+mod day09;
+mod day10;
+mod day11;
+mod util;
 
 fn day_from_input() -> Option<u8> {
     read_dir("inputs")
@@ -33,7 +39,7 @@ fn main() {
         &format!(
             "Total run time: {:.3}ms",
             if arg == Some(String::from("-a")) {
-                (1..=6).map(|n| run_day!(6 n)).sum::<f64>()
+                (1..=10).map(|n| run_day!(10 n)).sum::<f64>()
             } else {
                 let day_number = arg
                     .map(|a| {
@@ -42,7 +48,7 @@ fn main() {
                     })
                     .or_else(day_from_input)
                     .expect(&"No input file found".bold().bright_red());
-                run_day!(6 day_number)
+                run_day!(10 day_number)
             }
         )
         .bold()
