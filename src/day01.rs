@@ -4,7 +4,7 @@ pub struct Day01 {
     numbers: Vec<u32>,
 }
 
-impl Day for Day01 {
+impl Day<'_> for Day01 {
     fn new(input: &str) -> Self {
         Day01 {
             numbers: input

@@ -26,7 +26,7 @@ pub fn run_day(token_stream: TokenStream) -> TokenStream {
         day_number,
         (1..=day_count)
             .map(|n| format!(
-                "{0} => {{println!(\"\nDay {0}\");crate::day{0:02}::Day{0:02}::run(&std::fs::read_to_string(\"inputs/{0:02}.txt\").unwrap())}}",
+                "{0} => {{println!(\"{{}}\", \"\nDay {0}\".bold().bright_blue());crate::day{0:02}::Day{0:02}::run(&std::fs::read_to_string(\"inputs/{0:02}.txt\").unwrap())}}",
                 n
             ))
             .join(","),

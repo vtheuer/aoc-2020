@@ -15,7 +15,7 @@ impl Day03 {
     }
 }
 
-impl Day for Day03 {
+impl Day<'_> for Day03 {
     fn new(input: &str) -> Self {
         Day03 {
             grid: input

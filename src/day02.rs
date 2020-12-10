@@ -1,12 +1,12 @@
 use crate::day::Day;
 use regex::Regex;
 
-pub struct Day02 {
-    passwords: Vec<(usize, usize, char, String)>,
+pub struct Day02<'a> {
+    passwords: Vec<(usize, usize, char, &'a str)>,
 }
 
-impl Day for Day02 {
-    fn new(input: &str) -> Self {
+impl<'a> Day<'a> for Day02<'a> {
+    fn new(input: &'a str) -> Self {
         let re = Regex::new(r"(\d+)-(\d+) (.): (.+)").unwrap();
         Self {
             passwords: input

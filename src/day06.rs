@@ -15,7 +15,7 @@ impl Day06 {
     }
 }
 
-impl Day for Day06 {
+impl Day<'_> for Day06 {
     fn new(input: &str) -> Self {
         Day06 {
             groups: input

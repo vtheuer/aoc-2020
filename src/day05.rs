@@ -4,7 +4,7 @@ pub struct Day05 {
     seats: Vec<usize>,
 }
 
-impl Day for Day05 {
+impl Day<'_> for Day05 {
     fn new(input: &str) -> Self {
         let mut seats = input
             .lines()
