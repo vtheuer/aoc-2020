@@ -9,22 +9,22 @@ impl Day<'_> for Day05 {
         let mut seats = input
             .lines()
             .map(|l| {
-                l.chars()
-                    .map(|c| match c {
-                        'B' | 'R' => '1',
-                        'F' | 'L' => '0',
-                        _ => unreachable!("unexpected char {}", c),
-                    })
-                    .collect::<String>()
+                l.bytes().fold(0, |n, c| {
+                    (n << 1)
+                        | match c {
+                            b'B' | b'R' => 1,
+                            b'F' | b'L' => 0,
+                            _ => unreachable!("unexpected char {}", c),
+                        }
+                })
             })
-            .map(|n| usize::from_str_radix(&n, 2).unwrap())
-            .collect::<Vec<usize>>();
+            .collect::<Vec<_>>();
         seats.sort();
         Day05 { seats }
     }
 
     fn part_1(&self) -> Box<dyn ToString + '_> {
-        Box::new(self.seats.iter().max().unwrap())
+        Box::new(self.seats.last().unwrap())
     }
 
     fn part_2(&self) -> Box<dyn ToString> {

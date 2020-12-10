@@ -23,11 +23,7 @@ impl Day<'_> for Day06 {
                 .map(|group| {
                     group
                         .lines()
-                        .map(|l| {
-                            l.chars()
-                                .map(|c| c as u8 - 'a' as u8)
-                                .fold(0, |a, c| a | (1 << c))
-                        })
+                        .map(|l| l.bytes().fold(0, |a, c| a | (1 << (c - b'a'))))
                         .collect()
                 })
                 .collect(),
@@ -39,6 +35,6 @@ impl Day<'_> for Day06 {
     }
 
     fn part_2(&self) -> Box<dyn ToString> {
-        self.sum_groups_with((0..26).fold(0, |a, n| a | (1 << n)), |a, b| a & b)
+        self.sum_groups_with(2u32.pow(27) - 1, |a, b| a & b)
     }
 }

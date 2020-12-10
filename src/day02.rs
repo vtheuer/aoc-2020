@@ -41,8 +41,8 @@ impl<'a> Day<'a> for Day02<'a> {
             self.passwords
                 .iter()
                 .filter(|(a, b, required_char, password)| {
-                    vec![*a, *b]
-                        .into_iter()
+                    [*a, *b]
+                        .iter()
                         .filter(|&c| password.as_bytes()[c - 1] == *required_char as u8)
                         .count()
                         == 1

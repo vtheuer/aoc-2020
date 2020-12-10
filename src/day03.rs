@@ -20,8 +20,8 @@ impl Day<'_> for Day03 {
         Day03 {
             grid: input
                 .lines()
-                .map(|l| l.chars().map(|c| c == '#').collect::<Vec<_>>())
-                .collect::<Vec<_>>(),
+                .map(|l| l.chars().map(|c| c == '#').collect())
+                .collect(),
         }
     }
 

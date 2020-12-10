@@ -7,10 +7,7 @@ pub struct Day01 {
 impl Day<'_> for Day01 {
     fn new(input: &str) -> Self {
         Day01 {
-            numbers: input
-                .lines()
-                .map(|l| l.parse::<u32>().unwrap())
-                .collect::<Vec<u32>>(),
+            numbers: input.lines().map(|l| l.parse().unwrap()).collect(),
         }
     }
 

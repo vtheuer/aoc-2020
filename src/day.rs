@@ -16,7 +16,7 @@ pub trait Day<'a>: Sized {
         let (output, duration) = time(|| part(self));
         (
             format!(
-                "{}\nRun time: {:.6}µs\n",
+                "{}\nRun time: {:.0}µs\n",
                 output.as_ref().to_string().bold(),
                 duration
             ),
