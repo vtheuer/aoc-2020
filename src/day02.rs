@@ -1,5 +1,5 @@
 use crate::day::Day;
-use regex::Regex;
+use crate::util::split_pair;
 
 pub struct Day02<'a> {
     passwords: Vec<(usize, usize, char, &'a str)>,
@@ -7,23 +7,26 @@ pub struct Day02<'a> {
 
 impl<'a> Day<'a> for Day02<'a> {
     fn new(input: &'a str) -> Self {
-        let re = Regex::new(r"(\d+)-(\d+) (.): (.+)").unwrap();
         Self {
             passwords: input
                 .lines()
-                .map(|l| re.captures(l).unwrap())
-                .map(|c| {
+                .map(|l| {
+                    let (rule, password) = split_pair(l, ": ")?;
+                    let (range, c) = split_pair(rule, " ")?;
+                    let (min, max) = split_pair(range, "-")?;
+
                     Some((
-                        c.get(1)?.as_str().parse::<usize>().unwrap(),
-                        c.get(2)?.as_str().parse::<usize>().unwrap(),
-                        c.get(3)?.as_str().chars().next()?,
-                        c.get(4)?.as_str().to_string(),
+                        min.parse().ok()?,
+                        max.parse().ok()?,
+                        c.chars().nth(0)?,
+                        password,
                     ))
                 })
-                .map(|r| r.unwrap())
+                .map(Option::unwrap)
                 .collect(),
         }
     }
+
     fn part_1(&self) -> Box<dyn ToString + '_> {
         Box::new(
             self.passwords

@@ -1,50 +1,47 @@
 use crate::day::Day;
-use regex::Regex;
+use crate::util::split_pair;
+use std::collections::HashSet;
 
-pub struct Day04 {
-    passports: Vec<Vec<(String, String)>>,
+pub struct Day04<'a> {
+    passports: Vec<Vec<(&'a str, &'a str)>>,
 }
 
-impl Day for Day04 {
-    fn new(input: &str) -> Self {
+impl<'a> Day<'a> for Day04<'a> {
+    fn new(input: &'a str) -> Self {
         Day04 {
             passports: input
                 .split("\n\n")
-                .map(|passport| {
-                    passport
-                        .split(|c| c == ' ' || c == '\n')
-                        .filter(|pair| !pair.is_empty())
-                        .map(|pair| {
-                            let mut split = pair.split(':').map(String::from);
-                            (split.next().unwrap(), split.next().unwrap())
-                        })
+                .map(|group| {
+                    group
+                        .split(char::is_whitespace)
+                        .filter_map(|pair| split_pair(pair, ":"))
                         .collect::<Vec<_>>()
                 })
                 .filter(|pairs| {
                     pairs.len()
                         >= pairs
                             .iter()
-                            .find(|(k, _)| k == "cid")
+                            .find(|(k, _)| *k == "cid")
                             .and(Some(8))
                             .unwrap_or(7)
                 })
-                .collect::<Vec<_>>(),
+                .collect(),
         }
     }
+
     fn part_1(&self) -> Box<dyn ToString + '_> {
         Box::new(self.passports.len())
     }
 
     fn part_2(&self) -> Box<dyn ToString> {
-        let height_pattern = Regex::new(r"^(\d+)(cm|in)$").unwrap();
-        let hair_color_pattern = Regex::new(r"^#[0-9a-f]{6}$").unwrap();
-        let eye_color_pattern = Regex::new(r"^amb|blu|brn|gry|grn|hzl|oth$").unwrap();
-        let pid_pattern = Regex::new(r"^\d{9}$").unwrap();
+        let eye_colors = vec!["amb", "blu", "brn", "gry", "grn", "hzl", "oth"]
+            .into_iter()
+            .collect::<HashSet<_>>();
         Box::new(
             self.passports
                 .iter()
                 .filter(|pairs| {
-                    pairs.iter().all(|(k, v)| match k.as_str() {
+                    pairs.iter().all(|(k, v)| match *k {
                         "byr" => v
                             .parse::<u32>()
                             .map(|y| y >= 1920 && y <= 2002)
@@ -57,21 +54,22 @@ impl Day for Day04 {
                             .parse::<u32>()
                             .map(|y| y >= 2020 && y <= 2030)
                             .unwrap_or(false),
-                        "hgt" => height_pattern
-                            .captures(v)
-                            .and_then(|c| Some((c.get(1)?, c.get(2)?)))
-                            .and_then(|(h, u)| Some((h.as_str().parse::<u32>().ok()?, u.as_str())))
-                            .filter(|&(h, u)| {
-                                if u == "cm" {
-                                    h >= 150 && h <= 193
-                                } else {
-                                    h >= 59 && h <= 76
-                                }
+                        "hgt" => Some(v)
+                            .map(|s| (&s[..s.len() - 2], &s[s.len() - 2..]))
+                            .and_then(|(h, u)| Some((h.parse::<u32>().ok()?, u)))
+                            .filter(|&(h, u)| match u {
+                                "cm" => h >= 150 && h <= 193,
+                                "in" => h >= 59 && h <= 76,
+                                _ => false,
                             })
                             .is_some(),
-                        "hcl" => hair_color_pattern.is_match(v),
-                        "ecl" => eye_color_pattern.is_match(v),
-                        "pid" => pid_pattern.is_match(v),
+                        "hcl" => {
+                            v.len() == 7
+                                && v.chars().nth(0) == Some('#')
+                                && v.chars().skip(1).all(|c| c.is_ascii_hexdigit())
+                        }
+                        "ecl" => eye_colors.contains(v),
+                        "pid" => v.len() == 9 && v.chars().all(|c| c.is_digit(10)),
                         "cid" => true,
                         _ => unreachable!("unknown key {}", k),
                     })
