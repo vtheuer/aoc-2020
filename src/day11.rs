@@ -1,0 +1,123 @@
+use crate::day::Day;
+
+pub struct Day11 {
+    seats: Vec<Vec<Option<bool>>>,
+    width: isize,
+    height: isize,
+}
+
+impl Day11 {
+    fn find_seat(
+        &self,
+        seats: &Vec<Vec<Option<bool>>>,
+        (px, py): (isize, isize),
+        (dx, dy): (isize, isize),
+    ) -> Option<bool> {
+        let (mut x, mut y) = (px + dx, py + dy);
+
+        while x >= 0 && x < self.width && y >= 0 && y < self.height {
+            let seat = seats[y as usize][x as usize];
+            if seat.is_some() {
+                return seat;
+            }
+            x += dx;
+            y += dy;
+        }
+
+        None
+    }
+
+    fn find_count(
+        &self,
+        max_neighbours: usize,
+        count_neighbours: impl Fn(&Vec<Vec<Option<bool>>>, (isize, isize)) -> usize,
+    ) -> usize {
+        let mut seats = self.seats.clone();
+        let mut changed = seats
+            .iter()
+            .enumerate()
+            .flat_map(|(y, row)| {
+                row.iter()
+                    .enumerate()
+                    .filter_map(move |(x, seat)| seat.and(Some((x, y))))
+            })
+            .collect::<Vec<_>>();
+
+        while !changed.is_empty() {
+            let mut new_seats = seats.clone();
+            let mut new_changed = Vec::with_capacity(changed.len());
+            for (x, y) in changed {
+                let neighbours = count_neighbours(&seats, (x as isize, y as isize));
+                new_seats[y][x] = seats[y][x].map(|occupied| {
+                    if occupied && neighbours >= max_neighbours {
+                        new_changed.push((x, y));
+                        false
+                    } else if !occupied && neighbours == 0 {
+                        new_changed.push((x, y));
+                        true
+                    } else {
+                        occupied
+                    }
+                });
+            }
+            seats = new_seats;
+            changed = new_changed;
+        }
+
+        seats
+            .iter()
+            .map(|row| row.iter().filter(|&&seat| seat == Some(true)).count())
+            .sum()
+    }
+}
+
+const NEIGHBOURS: [(isize, isize); 8] = [
+    (-1, -1),
+    (-1, 0),
+    (-1, 1),
+    (0, -1),
+    (0, 1),
+    (1, -1),
+    (1, 0),
+    (1, 1),
+];
+
+impl Day<'_> for Day11 {
+    fn new(input: &str) -> Self {
+        let seats = input
+            .lines()
+            .map(|l| {
+                l.bytes()
+                    .map(|b| if b == b'L' { Some(false) } else { None })
+                    .collect()
+            })
+            .collect::<Vec<Vec<_>>>();
+        let width = seats[0].len() as isize;
+        let height = seats.len() as isize;
+        Day11 {
+            seats,
+            width,
+            height,
+        }
+    }
+
+    fn part_1(&self) -> Box<dyn ToString + '_> {
+        Box::new(self.find_count(4, |seats, (x, y)| {
+            NEIGHBOURS
+                .iter()
+                .map(|&(i, j)| (x + i, y + j))
+                .filter(|&(i, j)| i >= 0 && i < self.width && j >= 0 && j < self.height)
+                .filter(|&(i, j)| seats[j as usize][i as usize] == Some(true))
+                .count()
+        }))
+    }
+
+    fn part_2(&self) -> Box<dyn ToString> {
+        Box::new(self.find_count(5, |seats, position| {
+            NEIGHBOURS
+                .iter()
+                .filter(|&&direction| self.find_seat(seats, position, direction) == Some(true))
+                .count()
+        }))
+    }
+}
