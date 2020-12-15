@@ -5,6 +5,7 @@ use std::env;
 use std::fs::read_dir;
 
 use crate::day::Day;
+use crate::util::format_time;
 use colored::*;
 use macros::run_day;
 
@@ -41,9 +42,9 @@ fn main() {
     println!(
         "\n{}",
         &format!(
-            "Total run time: {:.3}ms",
-            if arg == Some(String::from("-a")) {
-                (1..=15).map(|n| run_day!(15 n)).sum::<f64>()
+            "Total run time: {}",
+            format_time(if arg == Some(String::from("-a")) {
+                (1..=15).map(|n| run_day!(15 n)).sum::<u128>()
             } else {
                 let day_number = arg
                     .map(|a| {
@@ -53,7 +54,7 @@ fn main() {
                     .or_else(day_from_input)
                     .expect(&"No input file found".bold().bright_red());
                 run_day!(15 day_number)
-            }
+            })
         )
         .bold()
         .cyan()
