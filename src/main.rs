@@ -23,6 +23,7 @@ mod day11;
 mod day12;
 mod day13;
 mod day14;
+mod day15;
 mod util;
 
 fn day_from_input() -> Option<u8> {
@@ -42,7 +43,7 @@ fn main() {
         &format!(
             "Total run time: {:.3}ms",
             if arg == Some(String::from("-a")) {
-                (1..=14).map(|n| run_day!(14 n)).sum::<f64>()
+                (1..=15).map(|n| run_day!(15 n)).sum::<f64>()
             } else {
                 let day_number = arg
                     .map(|a| {
@@ -51,7 +52,7 @@ fn main() {
                     })
                     .or_else(day_from_input)
                     .expect(&"No input file found".bold().bright_red());
-                run_day!(14 day_number)
+                run_day!(15 day_number)
             }
         )
         .bold()
