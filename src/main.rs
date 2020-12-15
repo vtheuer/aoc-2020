@@ -5,7 +5,7 @@ use std::env;
 use std::fs::read_dir;
 
 use crate::day::Day;
-use crate::util::format_time;
+use crate::util::format_duration;
 use colored::*;
 use macros::run_day;
 
@@ -39,24 +39,21 @@ fn day_from_input() -> Option<u8> {
 fn main() {
     let arg = env::args().skip(1).next();
 
-    println!(
-        "\n{}",
-        &format!(
-            "Total run time: {}",
-            format_time(if arg == Some(String::from("-a")) {
-                (1..=15).map(|n| run_day!(15 n)).sum::<u128>()
-            } else {
-                let day_number = arg
-                    .map(|a| {
-                        a.parse::<u8>()
-                            .expect(&"Could not read day number".bold().bright_red())
-                    })
-                    .or_else(day_from_input)
-                    .expect(&"No input file found".bold().bright_red());
-                run_day!(15 day_number)
-            })
-        )
-        .bold()
-        .cyan()
-    );
+    if arg == Some(String::from("-a")) {
+        println!(
+            "\n{}",
+            &format!(
+                "Total run time: {}",
+                format_duration((1..=15).map(|n| run_day!(15 n)).sum::<u128>())
+            )
+            .bold()
+            .cyan()
+        );
+    } else {
+        let day_number = arg
+            .map(|a| a.parse::<u8>().expect("Could not read day number"))
+            .or_else(day_from_input)
+            .expect("No input file found");
+        run_day!(15 day_number);
+    }
 }
