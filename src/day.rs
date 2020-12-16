@@ -32,8 +32,8 @@ fn format_row(k: &str, v: &str, left: usize, right: usize, header: bool) -> Stri
 }
 
 fn print_table((hk, hv): (&str, &str), rows: &Vec<(&str, &str)>) {
-    let left = char_count(&hk).max(rows.iter().map(|(k, _)| char_count(k)).max().unwrap());
-    let right = char_count(&hv).max(rows.iter().map(|(_, v)| char_count(v)).max().unwrap());
+    let left = 24.max(rows.iter().map(|(k, _)| char_count(k)).max().unwrap());
+    let right = 7.max(rows.iter().map(|(_, v)| char_count(v)).max().unwrap());
 
     println!(
         "┌{}┬{}┐\n{}\n├{0}┼{1}┤\n{}\n└{0}┴{1}┘",
@@ -69,11 +69,11 @@ pub trait Day<'a>: Sized {
             &vec![
                 ("Parse  :", &format_duration(parse_duration)),
                 (
-                    &format!("part 1 : {}", output_1),
+                    &format!("Part 1 : {}", output_1),
                     &format_duration(part_1_duration),
                 ),
                 (
-                    &format!("part 2 : {}", output_2),
+                    &format!("Part 2 : {}", output_2),
                     &format_duration(part_2_duration),
                 ),
             ],
