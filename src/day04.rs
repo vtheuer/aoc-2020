@@ -1,6 +1,6 @@
 use crate::day::Day;
 use crate::util::split_pair;
-use std::collections::HashSet;
+use fnv::FnvHashSet;
 
 pub struct Day04<'a> {
     passports: Vec<Vec<(&'a str, &'a str)>>,
@@ -36,7 +36,7 @@ impl<'a> Day<'a> for Day04<'a> {
     fn part_2(&self) -> Box<dyn ToString> {
         let eye_colors = vec!["amb", "blu", "brn", "gry", "grn", "hzl", "oth"]
             .into_iter()
-            .collect::<HashSet<_>>();
+            .collect::<FnvHashSet<_>>();
         Box::new(
             self.passports
                 .iter()

@@ -7,7 +7,7 @@ enum Instruction {
 }
 
 use crate::util::split_pair;
-use std::collections::HashMap;
+use fnv::FnvHashMap;
 use Instruction::*;
 
 pub struct Day14 {
@@ -87,7 +87,7 @@ impl Day<'_> for Day14 {
             self.instructions
                 .iter()
                 .fold(
-                    (HashMap::new(), vec![]),
+                    (FnvHashMap::default(), vec![]),
                     |(mut memory, mask), instruction| match instruction {
                         Mask(m) => (
                             memory,
@@ -118,7 +118,7 @@ impl Day<'_> for Day14 {
             self.instructions
                 .iter()
                 .fold(
-                    (HashMap::new(), &vec![]),
+                    (FnvHashMap::default(), &vec![]),
                     |(mut memory, mask), instruction| match instruction {
                         Mask(m) => (memory, &m),
                         Mem(address, value) => {

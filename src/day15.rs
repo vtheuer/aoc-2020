@@ -1,5 +1,5 @@
 use crate::day::Day;
-use std::collections::HashMap;
+use fnv::FnvHashMap;
 
 pub struct Day15 {
     numbers: Vec<usize>,
@@ -16,7 +16,7 @@ impl Day15 {
                         .take(start)
                         .enumerate()
                         .map(|(i, n)| (*n, i))
-                        .collect::<HashMap<_, _>>(),
+                        .collect::<FnvHashMap<_, _>>(),
                     self.numbers[start],
                 ),
                 |(mut last_occurrences, previous), i| {

@@ -1,7 +1,7 @@
 use crate::day::Day;
 use crate::util::split_pair;
+use fnv::FnvHashSet;
 use std::cell::Cell;
-use std::collections::HashSet;
 
 pub struct Day16<'a> {
     constraints: Vec<(&'a str, (usize, usize), (usize, usize))>,
@@ -102,7 +102,7 @@ impl<'a> Day<'a> for Day16<'a> {
         Box::new(
             possible_columns
                 .into_iter()
-                .scan(HashSet::new(), |used, (field, columns)| {
+                .scan(FnvHashSet::default(), |used, (field, columns)| {
                     let column = *columns.iter().find(|&c| !used.contains(c)).unwrap();
                     used.insert(column);
                     Some((field, self.my_ticket[column]))

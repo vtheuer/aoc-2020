@@ -1,12 +1,9 @@
-use std::collections::{HashMap, HashSet};
-
-use itertools::Itertools;
-
 use crate::day::Day;
 use crate::util::{rsplit_pair, split_pair};
+use fnv::{FnvHashMap, FnvHashSet};
 
 pub struct Day07<'a> {
-    rules: HashMap<&'a str, HashMap<&'a str, u32>>,
+    rules: FnvHashMap<&'a str, FnvHashMap<&'a str, u32>>,
 }
 
 impl Day07<'_> {
@@ -21,20 +18,20 @@ impl Day07<'_> {
 }
 
 fn bags_containing<'a>(
-    containers_by_bag: &HashMap<&str, Vec<&'a str>>,
+    containers_by_bag: &FnvHashMap<&str, Vec<&'a str>>,
     bag: &str,
-) -> HashSet<&'a str> {
+) -> FnvHashSet<&'a str> {
     containers_by_bag
         .get(bag)
         .map(|bags| {
             bags.into_iter()
-                .fold(HashSet::new(), |mut containers, container| {
+                .fold(FnvHashSet::default(), |mut containers, container| {
                     containers.insert(*container);
                     containers.extend(bags_containing(containers_by_bag, container));
                     containers
                 })
         })
-        .unwrap_or_else(HashSet::new)
+        .unwrap_or_else(FnvHashSet::default)
 }
 
 impl<'a> Day<'a> for Day07<'a> {
@@ -71,7 +68,16 @@ impl<'a> Day<'a> for Day07<'a> {
                     .flat_map(|(container, content)| {
                         content.into_iter().map(move |(bag, _)| (*bag, *container))
                     })
-                    .into_group_map(),
+                    .fold(
+                        FnvHashMap::default(),
+                        |mut containers_by_bag, (bag, container)| {
+                            containers_by_bag
+                                .entry(bag)
+                                .or_insert(Vec::new())
+                                .push(container);
+                            containers_by_bag
+                        },
+                    ),
                 "shiny gold",
             )
             .len(),
