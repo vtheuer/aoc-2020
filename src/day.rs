@@ -3,6 +3,7 @@ use std::time::Instant;
 use crate::util::format_duration;
 use colored::*;
 use itertools::Itertools;
+use std::fmt::Display;
 
 fn time<T, F: Fn() -> T>(f: F) -> (T, u128) {
     let begin = Instant::now();
@@ -47,20 +48,18 @@ fn print_table((hk, hv): (&str, &str), rows: &Vec<(&str, &str)>) {
 }
 
 pub trait Day<'a>: Sized {
-    fn new(input: &'a str) -> Self;
-    fn part_1(&self) -> Box<dyn ToString + '_>;
-    fn part_2(&self) -> Box<dyn ToString>;
+    type T1: Display;
+    type T2: Display;
 
-    fn run_part(&self, part: fn(&Self) -> Box<dyn ToString + '_>) -> (String, u128) {
-        let (output, duration) = time(|| part(self));
-        (output.to_string(), duration)
-    }
+    fn new(input: &'a str) -> Self;
+    fn part_1(&self) -> Self::T1;
+    fn part_2(&self) -> Self::T2;
 
     fn run(n: u8, input: &'a str) -> u128 {
         let (day, parse_duration) = time(|| Self::new(input));
 
-        let (output_1, part_1_duration) = day.run_part(Day::part_1);
-        let (output_2, part_2_duration) = day.run_part(Day::part_2);
+        let (output_1, part_1_duration) = time(|| day.part_1());
+        let (output_2, part_2_duration) = time(|| day.part_2());
 
         let total = parse_duration + part_1_duration + part_2_duration;
 

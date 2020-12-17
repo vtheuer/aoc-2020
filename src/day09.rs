@@ -7,6 +7,9 @@ pub struct Day09 {
 }
 
 impl Day<'_> for Day09 {
+    type T1 = usize;
+    type T2 = usize;
+
     fn new(input: &str) -> Self {
         Day09 {
             numbers: input.lines().map(|l| l.parse().unwrap()).collect(),
@@ -14,7 +17,7 @@ impl Day<'_> for Day09 {
         }
     }
 
-    fn part_1(&self) -> Box<dyn ToString + '_> {
+    fn part_1(&self) -> Self::T1 {
         let invalid = *self
             .numbers
             .iter()
@@ -32,35 +35,33 @@ impl Day<'_> for Day09 {
             .unwrap()
             .1;
         self.invalid.set(invalid);
-        Box::new(invalid)
+        invalid
     }
 
-    fn part_2(&self) -> Box<dyn ToString> {
+    fn part_2(&self) -> Self::T2 {
         let invalid = self.invalid.get();
 
-        Box::new(
-            self.numbers
-                .iter()
-                .enumerate()
-                .flat_map(|(i, &a)| {
-                    self.numbers[i + 1..]
-                        .iter()
-                        .scan(a, |sum, &b| {
-                            *sum += b;
-                            Some(*sum)
-                        })
-                        .take_while(|n| *n <= invalid)
-                        .enumerate()
-                        .map(move |(j, sum)| (i, i + j, sum))
-                })
-                .find(|(_, _, sum)| *sum == invalid)
-                .map(|(i, j, _)| {
-                    self.numbers[i..=j]
-                        .iter()
-                        .fold((usize::MAX, 0), |(min, max), &n| (min.min(n), max.max(n)))
-                })
-                .map(|(min, max)| min + max)
-                .unwrap(),
-        )
+        self.numbers
+            .iter()
+            .enumerate()
+            .flat_map(|(i, &a)| {
+                self.numbers[i + 1..]
+                    .iter()
+                    .scan(a, |sum, &b| {
+                        *sum += b;
+                        Some(*sum)
+                    })
+                    .take_while(|n| *n <= invalid)
+                    .enumerate()
+                    .map(move |(j, sum)| (i, i + j, sum))
+            })
+            .find(|(_, _, sum)| *sum == invalid)
+            .map(|(i, j, _)| {
+                self.numbers[i..=j]
+                    .iter()
+                    .fold((usize::MAX, 0), |(min, max), &n| (min.min(n), max.max(n)))
+            })
+            .map(|(min, max)| min + max)
+            .unwrap()
     }
 }

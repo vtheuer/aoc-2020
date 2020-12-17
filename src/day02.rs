@@ -6,6 +6,9 @@ pub struct Day02<'a> {
 }
 
 impl<'a> Day<'a> for Day02<'a> {
+    type T1 = usize;
+    type T2 = usize;
+
     fn new(input: &'a str) -> Self {
         Self {
             passwords: input
@@ -27,30 +30,26 @@ impl<'a> Day<'a> for Day02<'a> {
         }
     }
 
-    fn part_1(&self) -> Box<dyn ToString + '_> {
-        Box::new(
-            self.passwords
-                .iter()
-                .filter(|(min, max, required_char, password)| {
-                    let count = password.chars().filter(|&c| c == *required_char).count();
-                    count >= *min && count <= *max
-                })
-                .count(),
-        )
+    fn part_1(&self) -> Self::T1 {
+        self.passwords
+            .iter()
+            .filter(|(min, max, required_char, password)| {
+                let count = password.chars().filter(|&c| c == *required_char).count();
+                count >= *min && count <= *max
+            })
+            .count()
     }
 
-    fn part_2(&self) -> Box<dyn ToString> {
-        Box::new(
-            self.passwords
-                .iter()
-                .filter(|(a, b, required_char, password)| {
-                    [*a, *b]
-                        .iter()
-                        .filter(|&c| password.as_bytes()[c - 1] == *required_char as u8)
-                        .count()
-                        == 1
-                })
-                .count(),
-        )
+    fn part_2(&self) -> Self::T2 {
+        self.passwords
+            .iter()
+            .filter(|(a, b, required_char, password)| {
+                [*a, *b]
+                    .iter()
+                    .filter(|&c| password.as_bytes()[c - 1] == *required_char as u8)
+                    .count()
+                    == 1
+            })
+            .count()
     }
 }

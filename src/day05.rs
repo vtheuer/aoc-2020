@@ -5,6 +5,9 @@ pub struct Day05 {
 }
 
 impl Day<'_> for Day05 {
+    type T1 = usize;
+    type T2 = usize;
+
     fn new(input: &str) -> Self {
         let mut seats = input
             .lines()
@@ -23,17 +26,15 @@ impl Day<'_> for Day05 {
         Day05 { seats }
     }
 
-    fn part_1(&self) -> Box<dyn ToString + '_> {
-        Box::new(self.seats.last().unwrap())
+    fn part_1(&self) -> Self::T1 {
+        *self.seats.last().unwrap()
     }
 
-    fn part_2(&self) -> Box<dyn ToString> {
-        Box::new(
-            self.seats
-                .windows(2)
-                .find(|w| w[1] > w[0] + 1)
-                .map(|w| w[1] - 1)
-                .unwrap(),
-        )
+    fn part_2(&self) -> Self::T2 {
+        self.seats
+            .windows(2)
+            .find(|w| w[1] > w[0] + 1)
+            .map(|w| w[1] - 1)
+            .unwrap()
     }
 }

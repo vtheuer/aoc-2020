@@ -47,11 +47,14 @@ fn is_valid(n: usize, (min1, max1): (usize, usize), (min2, max2): (usize, usize)
 }
 
 impl<'a> Day<'a> for Day16<'a> {
+    type T1 = usize;
+    type T2 = usize;
+
     fn new(input: &'a str) -> Self {
         parse(input).unwrap()
     }
 
-    fn part_1(&self) -> Box<dyn ToString + '_> {
+    fn part_1(&self) -> Self::T1 {
         let valid_tickets = self
             .other_tickets
             .iter()
@@ -74,10 +77,10 @@ impl<'a> Day<'a> for Day16<'a> {
                 .map(|&(ticket, _)| ticket)
                 .collect(),
         );
-        Box::new(valid_tickets.iter().filter_map(|(_, n)| *n).sum::<usize>())
+        valid_tickets.iter().filter_map(|(_, n)| *n).sum::<usize>()
     }
 
-    fn part_2(&self) -> Box<dyn ToString> {
+    fn part_2(&self) -> Self::T2 {
         let valid_tickets = self.valid_tickets.take();
         let ticket_length = self.my_ticket.len();
         let mut possible_columns = self
@@ -99,17 +102,15 @@ impl<'a> Day<'a> for Day16<'a> {
 
         possible_columns.sort_by_key(|(_, columns)| columns.len());
 
-        Box::new(
-            possible_columns
-                .into_iter()
-                .scan(FnvHashSet::default(), |used, (field, columns)| {
-                    let column = *columns.iter().find(|&c| !used.contains(c)).unwrap();
-                    used.insert(column);
-                    Some((field, self.my_ticket[column]))
-                })
-                .filter(|&(field, _)| field.starts_with("departure"))
-                .map(|(_, value)| value)
-                .product::<usize>(),
-        )
+        possible_columns
+            .into_iter()
+            .scan(FnvHashSet::default(), |used, (field, columns)| {
+                let column = *columns.iter().find(|&c| !used.contains(c)).unwrap();
+                used.insert(column);
+                Some((field, self.my_ticket[column]))
+            })
+            .filter(|&(field, _)| field.starts_with("departure"))
+            .map(|(_, value)| value)
+            .product::<usize>()
     }
 }

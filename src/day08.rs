@@ -26,6 +26,9 @@ fn run(instructions: &Vec<(&str, isize)>) -> (bool, isize) {
 }
 
 impl<'a> Day<'a> for Day08<'a> {
+    type T1 = isize;
+    type T2 = isize;
+
     fn new(input: &'a str) -> Self {
         Day08::<'a> {
             instructions: input
@@ -39,28 +42,26 @@ impl<'a> Day<'a> for Day08<'a> {
         }
     }
 
-    fn part_1(&self) -> Box<dyn ToString + '_> {
-        Box::new(run(&self.instructions).1)
+    fn part_1(&self) -> Self::T1 {
+        run(&self.instructions).1
     }
 
-    fn part_2(&self) -> Box<dyn ToString> {
-        Box::new(
-            self.instructions
-                .iter()
-                .enumerate()
-                .filter_map(|(i, (op, _))| match *op {
-                    "jmp" => Some((i, "nop")),
-                    "nop" => Some((i, "jmp")),
-                    _ => None,
-                })
-                .map(|(i, op)| {
-                    let mut instructions = self.instructions.clone();
-                    instructions[i].0 = op;
-                    run(&instructions)
-                })
-                .find(|(terminates, _)| *terminates)
-                .unwrap()
-                .1,
-        )
+    fn part_2(&self) -> Self::T2 {
+        self.instructions
+            .iter()
+            .enumerate()
+            .filter_map(|(i, (op, _))| match *op {
+                "jmp" => Some((i, "nop")),
+                "nop" => Some((i, "jmp")),
+                _ => None,
+            })
+            .map(|(i, op)| {
+                let mut instructions = self.instructions.clone();
+                instructions[i].0 = op;
+                run(&instructions)
+            })
+            .find(|(terminates, _)| *terminates)
+            .unwrap()
+            .1
     }
 }

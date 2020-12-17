@@ -31,6 +31,9 @@ impl Day15 {
 }
 
 impl Day<'_> for Day15 {
+    type T1 = usize;
+    type T2 = usize;
+
     fn new(input: &str) -> Self {
         Day15 {
             numbers: input
@@ -41,11 +44,11 @@ impl Day<'_> for Day15 {
         }
     }
 
-    fn part_1(&self) -> Box<dyn ToString + '_> {
-        Box::new(self.play(2020))
+    fn part_1(&self) -> Self::T1 {
+        self.play(2020)
     }
 
-    fn part_2(&self) -> Box<dyn ToString> {
-        Box::new(self.play(30_000_000))
+    fn part_2(&self) -> Self::T2 {
+        self.play(30_000_000)
     }
 }

@@ -73,6 +73,9 @@ pub struct Day12 {
 }
 
 impl Day<'_> for Day12 {
+    type T1 = isize;
+    type T2 = isize;
+
     fn new(input: &str) -> Self {
         Day12 {
             instructions: input
@@ -97,7 +100,7 @@ impl Day<'_> for Day12 {
         }
     }
 
-    fn part_1(&self) -> Box<dyn ToString + '_> {
+    fn part_1(&self) -> Self::T1 {
         let (_, (x, y)) =
             self.instructions
                 .iter()
@@ -109,10 +112,10 @@ impl Day<'_> for Day12 {
                         Action::Forward => (d, d.apply(p, *value)),
                     },
                 );
-        Box::new(x.abs() + y.abs())
+        x.abs() + y.abs()
     }
 
-    fn part_2(&self) -> Box<dyn ToString> {
+    fn part_2(&self) -> Self::T2 {
         let (_, (x, y)) = self.instructions.iter().fold(
             ((10, -1), (0isize, 0isize)),
             |(w, p), (action, value)| match action {
@@ -121,6 +124,6 @@ impl Day<'_> for Day12 {
                 Action::Forward => (w, (p.0 + value * w.0, p.1 + value * w.1)),
             },
         );
-        Box::new(x.abs() + y.abs())
+        x.abs() + y.abs()
     }
 }

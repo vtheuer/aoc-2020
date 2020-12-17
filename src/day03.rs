@@ -16,6 +16,9 @@ impl Day03 {
 }
 
 impl Day<'_> for Day03 {
+    type T1 = usize;
+    type T2 = usize;
+
     fn new(input: &str) -> Self {
         Day03 {
             grid: input
@@ -25,16 +28,14 @@ impl Day<'_> for Day03 {
         }
     }
 
-    fn part_1(&self) -> Box<dyn ToString + '_> {
-        Box::new(self.count_trees((3, 1)))
+    fn part_1(&self) -> Self::T1 {
+        self.count_trees((3, 1))
     }
 
-    fn part_2(&self) -> Box<dyn ToString> {
-        Box::new(
-            [(1, 1), (3, 1), (5, 1), (7, 1), (1, 2)]
-                .iter()
-                .map(|&slope| self.count_trees(slope))
-                .product::<usize>(),
-        )
+    fn part_2(&self) -> Self::T2 {
+        [(1, 1), (3, 1), (5, 1), (7, 1), (1, 2)]
+            .iter()
+            .map(|&slope| self.count_trees(slope))
+            .product::<usize>()
     }
 }

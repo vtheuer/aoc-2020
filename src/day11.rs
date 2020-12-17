@@ -83,6 +83,9 @@ const NEIGHBOURS: [(isize, isize); 8] = [
 ];
 
 impl Day<'_> for Day11 {
+    type T1 = usize;
+    type T2 = usize;
+
     fn new(input: &str) -> Self {
         let seats = input
             .lines()
@@ -101,23 +104,23 @@ impl Day<'_> for Day11 {
         }
     }
 
-    fn part_1(&self) -> Box<dyn ToString + '_> {
-        Box::new(self.find_count(4, |seats, (x, y)| {
+    fn part_1(&self) -> Self::T1 {
+        self.find_count(4, |seats, (x, y)| {
             NEIGHBOURS
                 .iter()
                 .map(|&(i, j)| (x + i, y + j))
                 .filter(|&(i, j)| i >= 0 && i < self.width && j >= 0 && j < self.height)
                 .filter(|&(i, j)| seats[j as usize][i as usize] == Some(true))
                 .count()
-        }))
+        })
     }
 
-    fn part_2(&self) -> Box<dyn ToString> {
-        Box::new(self.find_count(5, |seats, position| {
+    fn part_2(&self) -> Self::T2 {
+        self.find_count(5, |seats, position| {
             NEIGHBOURS
                 .iter()
                 .filter(|&&direction| self.find_seat(seats, position, direction) == Some(true))
                 .count()
-        }))
+        })
     }
 }

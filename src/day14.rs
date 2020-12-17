@@ -56,6 +56,9 @@ fn addresses(mask: &Vec<Option<bool>>, address: usize) -> Vec<usize> {
 }
 
 impl Day<'_> for Day14 {
+    type T1 = usize;
+    type T2 = usize;
+
     fn new(input: &str) -> Self {
         Day14 {
             instructions: input
@@ -82,59 +85,54 @@ impl Day<'_> for Day14 {
         }
     }
 
-    fn part_1(&self) -> Box<dyn ToString + '_> {
-        Box::new(
-            self.instructions
-                .iter()
-                .fold(
-                    (FnvHashMap::default(), vec![]),
-                    |(mut memory, mask), instruction| match instruction {
-                        Mask(m) => (
-                            memory,
-                            m.iter()
-                                .enumerate()
-                                .filter_map(|(i, bit)| bit.map(|b| (b, i)))
-                                .collect(),
-                        ),
-                        Mem(address, value) => {
-                            memory.insert(
-                                *address,
-                                mask.iter().fold(*value, |masked_value, &(bit, i)| {
-                                    set(masked_value, i, bit)
-                                }),
-                            );
-                            (memory, mask)
-                        }
-                    },
-                )
-                .0
-                .values()
-                .sum::<usize>(),
-        )
+    fn part_1(&self) -> Self::T1 {
+        self.instructions
+            .iter()
+            .fold(
+                (FnvHashMap::default(), vec![]),
+                |(mut memory, mask), instruction| match instruction {
+                    Mask(m) => (
+                        memory,
+                        m.iter()
+                            .enumerate()
+                            .filter_map(|(i, bit)| bit.map(|b| (b, i)))
+                            .collect(),
+                    ),
+                    Mem(address, value) => {
+                        memory.insert(
+                            *address,
+                            mask.iter()
+                                .fold(*value, |masked_value, &(bit, i)| set(masked_value, i, bit)),
+                        );
+                        (memory, mask)
+                    }
+                },
+            )
+            .0
+            .values()
+            .sum::<usize>()
     }
 
-    fn part_2(&self) -> Box<dyn ToString> {
-        Box::new(
-            self.instructions
-                .iter()
-                .fold(
-                    (FnvHashMap::default(), &vec![]),
-                    |(mut memory, mask), instruction| match instruction {
-                        Mask(m) => (memory, &m),
-                        Mem(address, value) => {
-                            addresses(mask, *address)
-                                .into_iter()
-                                .for_each(|masked_address| {
-                                    memory.insert(masked_address, *value);
-                                });
+    fn part_2(&self) -> Self::T2 {
+        self.instructions
+            .iter()
+            .fold(
+                (FnvHashMap::default(), &vec![]),
+                |(mut memory, mask), instruction| match instruction {
+                    Mask(m) => (memory, &m),
+                    Mem(address, value) => {
+                        addresses(mask, *address)
+                            .into_iter()
+                            .for_each(|masked_address| {
+                                memory.insert(masked_address, *value);
+                            });
 
-                            (memory, mask)
-                        }
-                    },
-                )
-                .0
-                .values()
-                .sum::<usize>(),
-        )
+                        (memory, mask)
+                    }
+                },
+            )
+            .0
+            .values()
+            .sum::<usize>()
     }
 }

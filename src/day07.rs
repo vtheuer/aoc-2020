@@ -35,6 +35,9 @@ fn bags_containing<'a>(
 }
 
 impl<'a> Day<'a> for Day07<'a> {
+    type T1 = usize;
+    type T2 = u32;
+
     fn new(input: &'a str) -> Self {
         Day07::<'a> {
             rules: input
@@ -59,32 +62,30 @@ impl<'a> Day<'a> for Day07<'a> {
         }
     }
 
-    fn part_1(&self) -> Box<dyn ToString + '_> {
-        Box::new(
-            bags_containing(
-                &self
-                    .rules
-                    .iter()
-                    .flat_map(|(container, content)| {
-                        content.into_iter().map(move |(bag, _)| (*bag, *container))
-                    })
-                    .fold(
-                        FnvHashMap::default(),
-                        |mut containers_by_bag, (bag, container)| {
-                            containers_by_bag
-                                .entry(bag)
-                                .or_insert(Vec::new())
-                                .push(container);
-                            containers_by_bag
-                        },
-                    ),
-                "shiny gold",
-            )
-            .len(),
+    fn part_1(&self) -> Self::T1 {
+        bags_containing(
+            &self
+                .rules
+                .iter()
+                .flat_map(|(container, content)| {
+                    content.into_iter().map(move |(bag, _)| (*bag, *container))
+                })
+                .fold(
+                    FnvHashMap::default(),
+                    |mut containers_by_bag, (bag, container)| {
+                        containers_by_bag
+                            .entry(bag)
+                            .or_insert(Vec::new())
+                            .push(container);
+                        containers_by_bag
+                    },
+                ),
+            "shiny gold",
         )
+        .len()
     }
 
-    fn part_2(&self) -> Box<dyn ToString> {
-        Box::new(self.count_bags_in("shiny gold"))
+    fn part_2(&self) -> Self::T2 {
+        self.count_bags_in("shiny gold")
     }
 }

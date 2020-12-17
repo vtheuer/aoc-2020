@@ -51,6 +51,9 @@ where
 }
 
 impl Day<'_> for Day17 {
+    type T1 = usize;
+    type T2 = usize;
+
     fn new(input: &str) -> Self {
         Day17 {
             space: input
@@ -66,17 +69,17 @@ impl Day<'_> for Day17 {
         }
     }
 
-    fn part_1(&self) -> Box<dyn ToString + '_> {
-        Box::new(run(
+    fn part_1(&self) -> Self::T1 {
+        run(
             self.space.iter().map(|&(x, y)| (x, y, 0)).collect(),
             neighbors_3d,
-        ))
+        )
     }
 
-    fn part_2(&self) -> Box<dyn ToString> {
-        Box::new(run(
+    fn part_2(&self) -> Self::T2 {
+        run(
             self.space.iter().map(|&(x, y)| (x, y, 0, 0)).collect(),
             neighbors_4d,
-        ))
+        )
     }
 }
