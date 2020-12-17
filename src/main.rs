@@ -26,6 +26,7 @@ mod day13;
 mod day14;
 mod day15;
 mod day16;
+mod day17;
 mod util;
 
 fn day_from_input() -> Option<u8> {
@@ -45,7 +46,7 @@ fn main() {
             "\n{}",
             &format!(
                 "Total run time: {}",
-                format_duration((1..=16).map(|n| run_day!(16 n)).sum::<u128>())
+                format_duration((1..=17).map(|n| run_day!(17 n)).sum::<u128>())
             )
             .bold()
             .cyan()
@@ -55,6 +56,6 @@ fn main() {
             .map(|a| a.parse::<u8>().expect("Could not read day number"))
             .or_else(day_from_input)
             .expect("No input file found");
-        run_day!(16 day_number);
+        run_day!(17 day_number);
     }
 }

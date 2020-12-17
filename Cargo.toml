@@ -11,6 +11,7 @@ path = "src/macros.rs"
 
 [dependencies]
 itertools = "0.9"
+fnv = "1"
 regex = "1"
 colored = "2"
 
