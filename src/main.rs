@@ -27,6 +27,9 @@ mod day15;
 mod day16;
 mod day17;
 mod day18;
+mod day19;
+mod day20;
+mod day21;
 mod util;
 
 fn run_day(days: &[fn(&str) -> u128], n: u8) -> u128 {
@@ -45,7 +48,7 @@ fn day_from_input() -> Option<u8> {
 fn main() {
     let arg = env::args().skip(1).next();
 
-    let days: Vec<for<'r> fn(&'r str) -> u128> = days_vec!(18);
+    let days: Vec<for<'r> fn(&'r str) -> u128> = days_vec!(21);
 
     if arg == Some(String::from("-a")) {
         println!(
