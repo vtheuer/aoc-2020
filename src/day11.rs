@@ -7,24 +7,24 @@ pub struct Day11 {
 }
 
 impl Day11 {
+    fn is_valid(&self, x: isize, y: isize) -> bool {
+        x >= 0 && x < self.width && y >= 0 && y < self.height
+    }
+
     fn find_seat(
         &self,
         seats: &Vec<Vec<Option<bool>>>,
         (px, py): (isize, isize),
         (dx, dy): (isize, isize),
-    ) -> Option<bool> {
+    ) -> bool {
         let (mut x, mut y) = (px + dx, py + dy);
 
-        while x >= 0 && x < self.width && y >= 0 && y < self.height {
-            let seat = seats[y as usize][x as usize];
-            if seat.is_some() {
-                return seat;
-            }
+        while self.is_valid(x, y) && seats[y as usize][x as usize].is_none() {
             x += dx;
             y += dy;
         }
 
-        None
+        self.is_valid(x, y) && seats[y as usize][x as usize] == Some(true)
     }
 
     fn find_count(
@@ -109,7 +109,7 @@ impl Day<'_> for Day11 {
             NEIGHBOURS
                 .iter()
                 .map(|&(i, j)| (x + i, y + j))
-                .filter(|&(i, j)| i >= 0 && i < self.width && j >= 0 && j < self.height)
+                .filter(|&(i, j)| self.is_valid(i, j))
                 .filter(|&(i, j)| seats[j as usize][i as usize] == Some(true))
                 .count()
         })
@@ -119,7 +119,7 @@ impl Day<'_> for Day11 {
         self.find_count(5, |seats, position| {
             NEIGHBOURS
                 .iter()
-                .filter(|&&direction| self.find_seat(seats, position, direction) == Some(true))
+                .filter(|&&direction| self.find_seat(seats, position, direction))
                 .count()
         })
     }
