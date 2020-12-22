@@ -1,32 +1,26 @@
 use crate::day::Day;
-use fnv::FnvHashMap;
 
 pub struct Day15 {
-    numbers: Vec<usize>,
+    numbers: Vec<u32>,
 }
 
 impl Day15 {
-    fn play(&self, end: usize) -> usize {
-        let start = self.numbers.len() - 1;
-        (start..end - 1)
-            .fold(
-                (
-                    self.numbers
-                        .iter()
-                        .take(start)
-                        .enumerate()
-                        .map(|(i, n)| (*n, i))
-                        .collect::<FnvHashMap<_, _>>(),
-                    self.numbers[start],
-                ),
-                |(mut last_occurrences, previous), i| {
-                    let next = last_occurrences.get(&previous).map(|&j| i - j).unwrap_or(0);
-                    last_occurrences.insert(previous, i);
+    fn play(&self, end: u32) -> usize {
+        let start = self.numbers.len() as u32 - 1;
+        let mut last_seen = vec![u32::MAX; end as usize];
+        for (i, n) in self.numbers.iter().enumerate().take(start as usize) {
+            last_seen[*n as usize] = i as u32;
+        }
 
-                    (last_occurrences, next)
-                },
-            )
-            .1
+        (start..end - 1).fold(self.numbers[start as usize] as usize, |previous, i| {
+            let next = match last_seen[previous] {
+                u32::MAX => 0,
+                j => i - j,
+            } as usize;
+            last_seen[previous] = i;
+
+            next
+        })
     }
 }
 
