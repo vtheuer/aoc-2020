@@ -1,3 +1,5 @@
+#![allow(unused_imports, dead_code)]
+
 extern crate macros;
 
 use std::env;
@@ -30,6 +32,8 @@ mod day18;
 mod day19;
 mod day20;
 mod day21;
+mod day22;
+mod day23;
 mod util;
 
 fn run_day(days: &[fn(&str) -> u128], n: u8) -> u128 {
@@ -48,7 +52,7 @@ fn day_from_input() -> Option<u8> {
 fn main() {
     let arg = env::args().skip(1).next();
 
-    let days: Vec<for<'r> fn(&'r str) -> u128> = days_vec!(21);
+    let days: Vec<for<'r> fn(&'r str) -> u128> = days_vec!(23);
 
     if arg == Some(String::from("-a")) {
         println!(
